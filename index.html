@@ -3,46 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chatbot Sacré</title>
+  <title>Chatbot Sacré Multilingue</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       background-color: #111;
+      font-family: sans-serif;
+    }
+
+    .language-menu {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+    }
+
+    .lang-btn, .option-btn {
+      background-color: #222;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #welcome-box {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0,0,0,0.85);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 9;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    .option-group {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     iframe {
       border: none;
       width: 100%;
       height: 100%;
-    }
-
-    /* Texte de chargement en attendant le chatbot */
-    .loading {
-      color: white;
-      font-family: sans-serif;
-      text-align: center;
-      margin-top: 40%;
-      font-size: 1.2rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
     }
   </style>
 </head>
 <body>
-  <noscript>
-    <div class="loading">
-      Ce chatbot nécessite JavaScript pour fonctionner.
+
+  <div class="language-menu">
+    <button class="lang-btn" onclick="setLang('fr')">🇫🇷 FR</button>
+    <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+    <button class="lang-btn" onclick="setLang('pt')">🇧🇷 PT</button>
+    <button class="lang-btn" onclick="setLang('es')">🇪🇸 ES</button>
+  </div>
+
+  <div id="welcome-box" style="display:none;">
+    <p id="welcome-text"></p>
+    <div class="option-group">
+      <button class="option-btn" onclick="sendMessage('Je veux en savoir plus sur les retraites initiatiques')">🌿 Retraites initiatiques</button>
+      <button class="option-btn" onclick="sendMessage('Parle-moi du programme Alchimia')">💫 Programme Alchimia</button>
+      <button class="option-btn" onclick="sendMessage('Dis-m’en plus sur Venus in the 7 Seas')">🌸 Formation Féminin Sacré</button>
+      <button class="option-btn" onclick="sendMessage('Explique-moi les diètes de plantes ou quêtes de vision')">🌱 Diètes & Quêtes</button>
+      <button class="option-btn" onclick="sendMessage('J’ai des doutes ou des questions')">❓ J’ai des questions</button>
     </div>
-  </noscript>
+  </div>
 
   <iframe 
-    src="https://www.chatbase.co/chatbot-iframe/lu0eG4yRgJok2zxBMQyZd"
-    width="100%"
-    style="height: 100%; min-height: 700px"
-    frameborder="0"
-    title="Chatbot Selva"
+    id="chatbot-frame"
+    src="https://www.chatbase.co/chatbot-iframe/YOUR_BOT_ID_HERE"
+    title="Chatbot Multilingue"
     allow="microphone; clipboard-read; clipboard-write"
     loading="eager">
   </iframe>
+
+  <script>
+    const welcomeText = {
+      fr: `Bienvenue, Je suis Selva, l'assistant de Jana Yana – Life and Rituals. Si tu ressens l’appel d’un espace sacré pour te reconnecter à ton corps, à la sagesse féminine ou à ton essence profonde, je suis là pour t’éclairer.`,
+      en: `Welcome, I am Selva, the assistant of Jana Yana – Life and Rituals. If you're feeling the call to reconnect with your body, feminine wisdom, or your sacred essence, I'm here to support you.`,
+      pt: `Bem-vinda(o), eu sou Selva, o assistente da Jana Yana – Life and Rituals. Se você sente o chamado para se reconectar com seu corpo, sua sabedoria feminina ou sua essência profunda, estou aqui para te guiar.`,
+      es: `Bienvenida(o), soy Selva, la asistente de Jana Yana – Life and Rituals. Si sientes el llamado a reconectarte con tu cuerpo, sabiduría femenina o esencia profunda, estoy aquí para guiarte.`
+    };
+
+    function setLang(langCode) {
+      document.getElementById("welcome-box").style.display = "block";
+      document.getElementById("welcome-text").innerText = welcomeText[langCode];
+    }
+
+    function sendMessage(message) {
+      const iframe = document.getElementById('chatbot-frame');
+      iframe.contentWindow.postMessage({
+        action: 'chat-message',
+        message: message
+      }, '*');
+      document.getElementById("welcome-box").style.display = "none";
+    }
+  </script>
+
 </body>
 </html>
